@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /*
+   * 50~70대 사용자를 위해 본문 기본 크기를 18px 로 둔다.
+   * 크기 클래스를 붙이지 않은 요소가 브라우저 기본값 16px 로 떨어지지 않게 한다.
+   */
+  body {
+    @apply bg-slate-50 text-base text-slate-900;
+  }
+
+  /* 키보드 사용자를 위해 초점을 확실히 보이게 둔다. */
+  :focus-visible {
+    @apply outline-none ring-4 ring-brand-600 ring-offset-2;
+  }
+}
