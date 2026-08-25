@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
+import { Shell } from '@/components/ui';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -25,63 +26,123 @@ const NAV_ITEMS = [
   { href: '/articles', label: '읽을거리' },
 ] as const;
 
+/** 아래쪽 띠의 바로가기 묶음. */
+const FOOTER_LINKS = [
+  { href: '/retirement-calculator', label: '은퇴 계산기' },
+  { href: '/calculators/tax', label: '세금·건강보험료 계산기' },
+  { href: '/my-retirement', label: '내 은퇴 계획' },
+  { href: '/pension', label: '연금 안내' },
+  { href: '/articles', label: '읽을거리' },
+] as const;
+
 function SiteHeader() {
   return (
-    <header className="border-b-2 border-slate-200 bg-white">
-      <div className="mx-auto max-w-5xl px-4 py-4">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <Shell>
+        <div className="flex min-h-touch flex-wrap items-center gap-x-8 gap-y-2 py-2 lg:py-3">
           <Link
             href="/"
-            className="inline-flex min-h-touch items-center text-xl font-bold text-brand-700 sm:text-2xl"
+            className="inline-flex min-h-touch shrink-0 items-center gap-2.5 text-xl font-bold tracking-tight text-slate-900"
           >
+            {/* 글자만으로도 알아볼 수 있게 두고, 아이콘은 보조로만 쓴다. */}
+            <span
+              aria-hidden="true"
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-lg font-bold text-white"
+            >
+              은
+            </span>
             은퇴 금융 포털
           </Link>
-          <Link
-            href="/login"
-            className="inline-flex min-h-touch items-center rounded-xl border-2 border-slate-300 px-6 text-lg font-bold text-slate-700 hover:bg-slate-50"
-          >
-            로그인
-          </Link>
-        </div>
 
-        <nav aria-label="주요 메뉴" className="mt-4">
-          <ul className="flex flex-wrap gap-2">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="inline-flex min-h-touch items-center rounded-xl px-5 text-lg font-medium text-slate-800 hover:bg-brand-50 hover:text-brand-700"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+          {/*
+           * 좁은 화면에서는 메뉴가 여러 줄로 접히면서 화면 위쪽을 절반 가까이
+           * 차지한다. 줄바꿈 대신 가로로 밀어서 보게 한다.
+           */}
+          <nav
+            aria-label="주요 메뉴"
+            className="order-last -mx-5 w-[calc(100%+2.5rem)] overflow-x-auto sm:-mx-8 sm:w-[calc(100%+4rem)] lg:order-none lg:mx-0 lg:w-auto lg:overflow-visible"
+          >
+            <ul className="flex w-max items-center gap-1 px-5 pb-1 sm:px-8 lg:w-auto lg:px-0 lg:pb-0">
+              {NAV_ITEMS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="inline-flex min-h-touch shrink-0 items-center whitespace-nowrap rounded-lg px-4 text-lg font-medium text-slate-700 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="ml-auto flex items-center gap-3">
+            <Link
+              href="/login"
+              className="inline-flex min-h-touch items-center rounded-lg px-4 text-lg font-bold text-slate-700 transition-colors hover:text-brand-700"
+            >
+              로그인
+            </Link>
+            <Link
+              href="/retirement-calculator"
+              className="hidden min-h-touch items-center rounded-lg bg-brand-600 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-700 sm:inline-flex"
+            >
+              계산 시작
+            </Link>
+          </div>
+        </div>
+      </Shell>
     </header>
   );
 }
 
 function SiteFooter() {
   return (
-    <footer className="mt-16 border-t-2 border-slate-200 bg-white">
-      <div className="mx-auto max-w-5xl space-y-4 px-4 py-10 text-base text-slate-600">
-        <p className="text-lg font-bold text-slate-800">안내</p>
-        <p>
-          이 사이트의 계산 결과는 사용자가 입력한 값과 화면에 표시된 가정을 바탕으로 한
-          <strong className="text-slate-800"> 참고 자료</strong>입니다. 투자 권유나
-          금융상품 추천이 아니며, 세무·법률 자문도 아닙니다.
-        </p>
-        <p>
-          실제 연금 수령액과 세금은 개인의 가입 이력과 그때의 제도에 따라 달라집니다.
-          중요한 결정을 앞두고 있다면 국민연금공단, 금융감독원 등 공식 기관이나 자격을
-          갖춘 전문가와 상담하시기 바랍니다.
-        </p>
-        <p>
-          입력한 정보는 서버로 전송되지 않고 사용하시는 기기(브라우저)에만 저장됩니다.
-        </p>
-      </div>
+    <footer className="mt-auto bg-brand-950 text-slate-300">
+      <Shell className="py-14">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+          <div>
+            <p className="text-xl font-bold text-white">은퇴 금융 포털</p>
+            <p className="mt-4 max-w-prose text-base leading-relaxed">
+              가진 자산과 연금으로 은퇴 후 매달 얼마를 쓸 수 있고, 자산이 언제까지
+              유지되는지 계산합니다. 종목 추천이나 단기 투자정보를 다루지 않습니다.
+            </p>
+          </div>
+
+          <nav aria-label="바로가기">
+            <p className="text-lg font-bold text-white">바로가기</p>
+            <ul className="mt-4 space-y-1">
+              {FOOTER_LINKS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="inline-flex min-h-touch items-center text-base text-slate-300 transition-colors hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        <div className="mt-12 space-y-4 border-t border-white/10 pt-8 text-base leading-relaxed text-slate-400">
+          <p className="text-lg font-bold text-white">안내</p>
+          <p className="max-w-prose">
+            이 사이트의 계산 결과는 사용자가 입력한 값과 화면에 표시된 가정을 바탕으로 한
+            <strong className="text-slate-200"> 참고 자료</strong>입니다. 투자 권유나
+            금융상품 추천이 아니며, 세무·법률 자문도 아닙니다.
+          </p>
+          <p className="max-w-prose">
+            실제 연금 수령액과 세금은 개인의 가입 이력과 그때의 제도에 따라 달라집니다.
+            중요한 결정을 앞두고 있다면 국민연금공단, 금융감독원 등 공식 기관이나 자격을
+            갖춘 전문가와 상담하시기 바랍니다.
+          </p>
+          <p className="max-w-prose">
+            입력한 정보는 서버로 전송되지 않고 사용하시는 기기(브라우저)에만 저장됩니다.
+          </p>
+        </div>
+      </Shell>
     </footer>
   );
 }
@@ -89,9 +150,13 @@ function SiteFooter() {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className="flex min-h-screen flex-col">
+      {/*
+       * 배경 띠가 화면 끝까지 닿아야 하므로 main 에는 폭 제한을 두지 않는다.
+       * 폭은 각 페이지가 Shell 로 정한다.
+       */}
+      <body className="flex min-h-screen flex-col bg-white">
         <SiteHeader />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10">{children}</main>
+        <main className="flex-1">{children}</main>
         <SiteFooter />
       </body>
     </html>

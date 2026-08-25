@@ -8,21 +8,92 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-/** 페이지 제목과 설명. 모든 페이지가 같은 형태를 쓴다. */
+/**
+ * 화면 폭을 쓰는 바깥 껍데기.
+ *
+ * 배경 띠는 화면 끝까지 채우고, 안쪽 내용만 이 껍데기로 감싼다.
+ * 폭 값을 여기 한 곳에만 두어 페이지마다 다른 폭이 생기지 않게 한다.
+ */
+export function Shell({
+  children,
+  className = '',
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12 xl:px-16 ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * 페이지 제목과 설명. 모든 페이지가 같은 형태를 쓴다.
+ *
+ * 어두운 띠 위에 얹어 화면 상단을 가득 채운다.
+ */
 export function PageHeading({
   title,
   description,
+  eyebrow,
 }: {
   title: string;
   description?: string;
+  /** 제목 위에 붙는 작은 분류 문구. */
+  eyebrow?: string;
 }) {
   return (
-    <header className="mb-8">
-      <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">{title}</h1>
+    <div className="grid-texture border-b border-white/10 bg-brand-950">
+      <Shell className="py-14 lg:py-20">
+        {eyebrow ? (
+          <p className="mb-4 text-base font-bold tracking-wide text-brand-300">
+            {eyebrow}
+          </p>
+        ) : null}
+        <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-5 max-w-prose text-lg leading-relaxed text-slate-300">
+            {description}
+          </p>
+        ) : null}
+      </Shell>
+    </div>
+  );
+}
+
+/** 페이지 본문 영역. 밝은 배경 위에 놓인다. */
+export function Section({
+  children,
+  className = '',
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <section className={`py-12 lg:py-16 ${className}`}>{children}</section>;
+}
+
+/** 본문 영역의 소제목. 넓은 화면에서 각 구획을 구분한다. */
+export function SectionTitle({
+  children,
+  description,
+}: {
+  children: ReactNode;
+  description?: string;
+}) {
+  return (
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        {children}
+      </h2>
       {description ? (
-        <p className="mt-3 max-w-3xl text-lg text-slate-700">{description}</p>
+        <p className="mt-3 max-w-prose text-lg text-slate-600">{description}</p>
       ) : null}
-    </header>
+    </div>
   );
 }
 
@@ -36,7 +107,7 @@ export function Card({
 }) {
   return (
     <section
-      className={`rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ${className}`}
+      className={`rounded-2xl border border-slate-200 bg-white p-6 shadow-card sm:p-8 ${className}`}
     >
       {children}
     </section>
@@ -45,7 +116,9 @@ export function Card({
 
 /** 카드 안의 소제목. */
 export function CardTitle({ children }: { children: ReactNode }) {
-  return <h2 className="mb-4 text-xl font-bold text-slate-900">{children}</h2>;
+  return (
+    <h2 className="mb-5 text-xl font-bold tracking-tight text-slate-900">{children}</h2>
+  );
 }
 
 /** 강조 색상 종류. 부족·경고는 caution, 여유는 good 을 쓴다. */
@@ -63,6 +136,14 @@ const TONE_BOX: Record<Tone, string> = {
   brand: 'border-brand-100 bg-brand-50',
   caution: 'border-caution-600/30 bg-caution-50',
   good: 'border-good-600/30 bg-good-50',
+};
+
+/** 핵심 숫자 카드 위쪽에 두는 색 띠. 숫자의 성격을 색으로도 알린다. */
+const TONE_BAR: Record<Tone, string> = {
+  neutral: 'bg-slate-400',
+  brand: 'bg-brand-600',
+  caution: 'bg-caution-600',
+  good: 'bg-good-600',
 };
 
 /**
@@ -83,10 +164,15 @@ export function KeyFigure({
   tone?: Tone;
 }) {
   return (
-    <div className={`rounded-2xl border p-6 ${TONE_BOX[tone]}`}>
-      <p className="text-lg font-medium text-slate-700">{label}</p>
-      <p className={`mt-2 text-3xl font-bold ${TONE_VALUE[tone]}`}>{value}</p>
-      {hint ? <p className="mt-2 text-base text-slate-600">{hint}</p> : null}
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
+      <div className={`h-1.5 w-full ${TONE_BAR[tone]}`} />
+      <div className="p-6">
+        <p className="text-base font-bold text-slate-600">{label}</p>
+        <p className={`tabular mt-3 text-3xl font-bold tracking-tight ${TONE_VALUE[tone]}`}>
+          {value}
+        </p>
+        {hint ? <p className="mt-3 text-base leading-relaxed text-slate-600">{hint}</p> : null}
+      </div>
     </div>
   );
 }
@@ -102,12 +188,16 @@ export function LabeledValue({
   tone?: Tone;
 }) {
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-100 py-3 last:border-b-0">
-      <span className="text-lg text-slate-700">{label}</span>
-      <span className={`text-lg font-bold ${TONE_VALUE[tone]}`}>{value}</span>
+    <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-100 py-3.5 last:border-b-0">
+      <span className="text-lg text-slate-600">{label}</span>
+      <span className={`tabular text-lg font-bold ${TONE_VALUE[tone]}`}>{value}</span>
     </div>
   );
 }
+
+/** 버튼 공통 모양. 터치 영역을 충분히 크게 둔다. */
+const BUTTON_BASE =
+  'inline-flex min-h-touch items-center justify-center rounded-xl px-8 text-lg font-bold tracking-tight transition-all duration-150';
 
 /** 버튼 모양 링크. 터치 영역을 충분히 크게 둔다. */
 export function ButtonLink({
@@ -117,18 +207,17 @@ export function ButtonLink({
 }: {
   href: string;
   children: ReactNode;
-  variant?: 'primary' | 'secondary';
+  /** onDark 는 어두운 띠 위에 놓는 보조 버튼이다. */
+  variant?: 'primary' | 'secondary' | 'onDark';
 }) {
-  const style =
-    variant === 'primary'
-      ? 'bg-brand-600 text-white hover:bg-brand-700'
-      : 'border-2 border-brand-600 bg-white text-brand-700 hover:bg-brand-50';
+  const styles: Record<string, string> = {
+    primary: 'bg-brand-600 text-white shadow-card hover:bg-brand-700 hover:shadow-card-hover',
+    secondary: 'border-2 border-slate-300 bg-white text-slate-800 hover:border-brand-600 hover:text-brand-700',
+    onDark: 'border-2 border-white/30 bg-white/5 text-white hover:border-white/60 hover:bg-white/10',
+  };
 
   return (
-    <Link
-      href={href}
-      className={`inline-flex min-h-touch items-center justify-center rounded-xl px-8 text-lg font-bold transition-colors ${style}`}
-    >
+    <Link href={href} className={`${BUTTON_BASE} ${styles[variant] ?? styles.primary}`}>
       {children}
     </Link>
   );
@@ -151,8 +240,8 @@ export function ActionButton({
   fullWidth?: boolean;
 }) {
   const styles: Record<string, string> = {
-    primary: 'bg-brand-600 text-white hover:bg-brand-700',
-    secondary: 'border-2 border-slate-300 bg-white text-slate-800 hover:bg-slate-50',
+    primary: 'bg-brand-600 text-white shadow-card hover:bg-brand-700 hover:shadow-card-hover',
+    secondary: 'border-2 border-slate-300 bg-white text-slate-800 hover:border-brand-600 hover:text-brand-700',
     danger: 'border-2 border-caution-600 bg-white text-caution-700 hover:bg-caution-50',
   };
 
@@ -161,7 +250,7 @@ export function ActionButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex min-h-touch items-center justify-center rounded-xl px-8 text-lg font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+      className={`${BUTTON_BASE} disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none ${
         styles[variant] ?? styles.primary
       } ${fullWidth ? 'w-full' : ''}`}
     >
@@ -185,9 +274,9 @@ export function Notice({
   tone?: Tone;
 }) {
   return (
-    <div className={`rounded-xl border p-5 ${TONE_BOX[tone]}`}>
+    <div className={`rounded-xl border-l-4 border-y border-r p-5 ${TONE_BOX[tone]}`}>
       {title ? <p className="mb-2 text-lg font-bold text-slate-900">{title}</p> : null}
-      <div className="space-y-2 text-base text-slate-700">{children}</div>
+      <div className="space-y-2 text-base leading-relaxed text-slate-700">{children}</div>
     </div>
   );
 }
@@ -204,5 +293,7 @@ export function TermHint({ children }: { children: ReactNode }) {
 
 /** 표 형태의 비교 결과를 감싼다. 좁은 화면에서 가로 스크롤을 허용한다. */
 export function TableWrap({ children }: { children: ReactNode }) {
-  return <div className="overflow-x-auto">{children}</div>;
+  return (
+    <div className="overflow-x-auto rounded-xl border border-slate-200">{children}</div>
+  );
 }

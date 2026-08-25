@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { RetirementWizard } from '@/components/RetirementWizard';
-import { PageHeading } from '@/components/ui';
+import { PageHeading, Section, Shell } from '@/components/ui';
 
 export const metadata: Metadata = {
   title: '은퇴 계산기',
@@ -10,12 +10,19 @@ export const metadata: Metadata = {
 
 export default function RetirementCalculatorPage() {
   return (
-    <div>
+    <>
       <PageHeading
+        eyebrow="계산기"
         title="은퇴 계산기"
         description="4단계로 입력하면 은퇴 후 매달 얼마를 쓸 수 있고 자산이 언제까지 유지되는지 계산해 드립니다. 입력한 값은 서버로 전송되지 않습니다."
       />
-      <RetirementWizard />
-    </div>
+      <div className="bg-slate-50">
+        <Shell>
+          <Section>
+            <RetirementWizard />
+          </Section>
+        </Shell>
+      </div>
+    </>
   );
 }

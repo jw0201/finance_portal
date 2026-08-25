@@ -176,8 +176,12 @@ export function TaxCalculatorClient() {
   const ageId = useId();
 
   return (
-    <div className="space-y-8">
-      <Card>
+    /*
+     * 넓은 화면에서는 입력 칸을 왼쪽에 붙여 두고 결과만 오른쪽에서 바뀌게 한다.
+     * 값을 바꿀 때마다 위아래로 오갈 필요가 없다.
+     */
+    <div className="grid gap-8 lg:grid-cols-[22rem_minmax(0,1fr)] xl:grid-cols-[26rem_minmax(0,1fr)] xl:gap-10">
+      <Card className="lg:sticky lg:top-28 lg:self-start">
         <CardTitle>값을 입력해 주세요</CardTitle>
         <div className="space-y-6">
           <div>
@@ -222,6 +226,7 @@ export function TaxCalculatorClient() {
         </div>
       </Card>
 
+      <div className="space-y-6">
       <EstimateBlock
         title="건강보험료 (지역가입자 · 소득 기준)"
         estimate={health}
@@ -337,6 +342,7 @@ export function TaxCalculatorClient() {
           주세요.
         </p>
       </Notice>
+      </div>
     </div>
   );
 }

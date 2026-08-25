@@ -18,9 +18,9 @@ import {
   validateRetirementInput,
 } from '@/domain/retirement/validation';
 import type { RetirementInput } from '@/domain/retirement/types';
-import { formatAge } from '@/lib/format';
+import { formatAge, formatWon } from '@/lib/format';
 import { AgeField, AmountField, RateField, YesNoField } from './AmountField';
-import { ActionButton, Card, CardTitle, Notice } from './ui';
+import { ActionButton, Card, CardTitle, LabeledValue, Notice } from './ui';
 import { RetirementResult } from './RetirementResult';
 
 /** 금액 입력의 증감 단위. */
@@ -150,14 +150,19 @@ export function RetirementWizard({
   }
 
   return (
-    <div className="space-y-6">
+    /*
+     * 입력 화면은 한 번에 한 단계만 보여준다. 넓은 화면에서 칸을 가로로 늘리면
+     * 글자와 입력창 사이가 멀어져 오히려 읽기 어려워지므로 폭을 제한한다.
+     * 대신 옆에 전체 단계를 보여주어 남은 과정을 알 수 있게 한다.
+     */
+    <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,40rem)] lg:gap-10 xl:grid-cols-[16rem_minmax(0,42rem)_minmax(0,20rem)] xl:gap-12">
       {/* 진행 상황 */}
-      <div>
+      <div className="lg:sticky lg:top-28 lg:self-start">
         <p className="text-lg font-bold text-brand-700">
           {STEP_TITLES[step]} (전체 {TOTAL_STEPS}단계)
         </p>
         <div
-          className="mt-3 flex gap-2"
+          className="mt-3 flex gap-2 lg:hidden"
           role="progressbar"
           aria-valuenow={step + 1}
           aria-valuemin={1}
@@ -173,6 +178,31 @@ export function RetirementWizard({
             />
           ))}
         </div>
+
+        {/* 넓은 화면에서는 단계 이름을 모두 보여준다. */}
+        <ol className="mt-6 hidden space-y-1 lg:block" aria-hidden="true">
+          {STEP_TITLES.map((title, index) => (
+            <li
+              key={title}
+              className={`flex items-center gap-3 rounded-lg px-3 py-3 text-base font-bold ${
+                index === step
+                  ? 'bg-brand-50 text-brand-700'
+                  : index < step
+                    ? 'text-slate-600'
+                    : 'text-slate-400'
+              }`}
+            >
+              <span
+                className={`tabular flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base ${
+                  index <= step ? 'bg-brand-600 text-white' : 'bg-slate-200 text-slate-500'
+                }`}
+              >
+                {index + 1}
+              </span>
+              {title.replace(/^\d단계 · /, '')}
+            </li>
+          ))}
+        </ol>
       </div>
 
       <Card>
@@ -370,6 +400,50 @@ export function RetirementWizard({
           </ActionButton>
         </div>
       </Card>
+
+      {/*
+       * 지금까지 넣은 값을 옆에 보여준다. 단계를 넘어가면 앞 단계 입력이
+       * 화면에서 사라지므로, 무엇을 넣었는지 다시 확인할 수 있게 한다.
+       * 계산하지 않고 입력값을 그대로 보여주기만 한다.
+       */}
+      <aside className="hidden xl:sticky xl:top-28 xl:block xl:self-start">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+          <p className="text-lg font-bold text-slate-900">지금까지 입력한 값</p>
+          <div className="mt-4">
+            <LabeledValue label="현재 나이" value={formatAge(input.currentAge)} />
+            <LabeledValue label="은퇴 나이" value={formatAge(input.retirementAge)} />
+            <LabeledValue label="기대수명" value={formatAge(input.lifeExpectancy)} />
+            {step >= 1 ? (
+              <LabeledValue
+                label="금융자산"
+                value={formatWon(input.financialAssets)}
+              />
+            ) : null}
+            {step >= 2 ? (
+              <>
+                <LabeledValue
+                  label="국민연금 (월)"
+                  value={formatWon(input.nationalPensionMonthly)}
+                />
+                <LabeledValue
+                  label="퇴직·개인연금 (월)"
+                  value={formatWon(input.privatePensionMonthly)}
+                />
+              </>
+            ) : null}
+            {step >= 3 ? (
+              <LabeledValue
+                label="월 생활비"
+                value={formatWon(input.monthlyLivingCost)}
+              />
+            ) : null}
+          </div>
+          <p className="mt-5 text-base leading-relaxed text-slate-600">
+            아직 계산 전입니다. 마지막 단계에서 &quot;결과 보기&quot; 를 누르면
+            자산이 언제까지 유지되는지 계산해 드립니다.
+          </p>
+        </div>
+      </aside>
     </div>
   );
 }

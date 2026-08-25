@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ButtonLink, Card, CardTitle, Notice, PageHeading } from '@/components/ui';
+import {
+  ButtonLink,
+  Card,
+  CardTitle,
+  Notice,
+  PageHeading,
+  Section,
+  Shell,
+} from '@/components/ui';
 
 export const metadata: Metadata = {
   title: '연금 안내',
@@ -34,12 +42,16 @@ const OFFICIAL_LINKS = [
 
 export default function PensionPage() {
   return (
-    <div className="space-y-8">
+    <>
       <PageHeading
+        eyebrow="제도 안내"
         title="연금 안내"
         description="은퇴 소득의 바탕이 되는 연금 제도를 쉬운 말로 정리했습니다. 예상 수령액은 공식 기관에서 확인하는 방법을 안내합니다."
       />
 
+      <div className="bg-slate-50">
+        <Shell>
+          <Section className="space-y-8">
       <Notice title="이 사이트가 연금액을 계산하지 않는 이유" tone="brand">
         <p>
           국민연금 예상 수령액은 가입 기간, 낸 보험료, 그동안의 소득에 따라 사람마다
@@ -92,64 +104,66 @@ export default function PensionPage() {
         </div>
       </Card>
 
-      <Card>
-        <CardTitle>퇴직연금</CardTitle>
-        <div className="space-y-3 text-lg text-slate-800">
-          <p>
-            회사가 근로자의 퇴직급여를 금융기관에 적립해 두는 제도입니다. 퇴직할 때
-            일시금으로 받거나 연금 형태로 나눠 받을 수 있습니다.
-          </p>
-          <p>
-            운용 방식에 따라 회사가 정해진 금액을 보장하는 형태와, 근로자가 직접 운용해
-            결과에 따라 금액이 달라지는 형태가 있습니다. 본인이 어느 쪽인지는 회사나
-            가입한 금융기관에서 확인할 수 있습니다.
-          </p>
-        </div>
-      </Card>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <Card>
+          <CardTitle>퇴직연금</CardTitle>
+          <div className="space-y-3 text-lg text-slate-800">
+            <p>
+              회사가 근로자의 퇴직급여를 금융기관에 적립해 두는 제도입니다. 퇴직할 때
+              일시금으로 받거나 연금 형태로 나눠 받을 수 있습니다.
+            </p>
+            <p>
+              운용 방식에 따라 회사가 정해진 금액을 보장하는 형태와, 근로자가 직접 운용해
+              결과에 따라 금액이 달라지는 형태가 있습니다. 본인이 어느 쪽인지는 회사나
+              가입한 금융기관에서 확인할 수 있습니다.
+            </p>
+          </div>
+        </Card>
 
-      <Card>
-        <CardTitle>IRP (개인형 퇴직연금)</CardTitle>
-        <div className="space-y-3 text-lg text-slate-800">
-          <p>
-            개인이 직접 만드는 은퇴 전용 계좌입니다. 퇴직할 때 받은 퇴직금을 옮겨 담을 수
-            있고, 본인이 추가로 넣을 수도 있습니다.
-          </p>
-          <p>
-            은퇴 후 연금으로 나눠 받는 것을 전제로 만든 계좌라서, 중간에 꺼내 쓰면
-            불이익이 있을 수 있습니다.
-          </p>
-        </div>
-      </Card>
+        <Card>
+          <CardTitle>IRP (개인형 퇴직연금)</CardTitle>
+          <div className="space-y-3 text-lg text-slate-800">
+            <p>
+              개인이 직접 만드는 은퇴 전용 계좌입니다. 퇴직할 때 받은 퇴직금을 옮겨 담을 수
+              있고, 본인이 추가로 넣을 수도 있습니다.
+            </p>
+            <p>
+              은퇴 후 연금으로 나눠 받는 것을 전제로 만든 계좌라서, 중간에 꺼내 쓰면
+              불이익이 있을 수 있습니다.
+            </p>
+          </div>
+        </Card>
 
-      <Card>
-        <CardTitle>연금저축</CardTitle>
-        <div className="space-y-3 text-lg text-slate-800">
-          <p>
-            노후를 위해 개인이 스스로 넣는 상품입니다. 퇴직과 관계없이 가입할 수
-            있습니다.
-          </p>
-          <p>
-            IRP와 연금저축에는 세액공제 혜택이 있고, 연금으로 받을 때의 세금 규정도 따로
-            있습니다. 한도와 세율은 법으로 정해져 있고 바뀔 수 있어 이 사이트에 적지
-            않았습니다.
-          </p>
-        </div>
-      </Card>
+        <Card>
+          <CardTitle>연금저축</CardTitle>
+          <div className="space-y-3 text-lg text-slate-800">
+            <p>
+              노후를 위해 개인이 스스로 넣는 상품입니다. 퇴직과 관계없이 가입할 수
+              있습니다.
+            </p>
+            <p>
+              IRP와 연금저축에는 세액공제 혜택이 있고, 연금으로 받을 때의 세금 규정도 따로
+              있습니다. 한도와 세율은 법으로 정해져 있고 바뀔 수 있어 이 사이트에 적지
+              않았습니다.
+            </p>
+          </div>
+        </Card>
 
-      <Card>
-        <CardTitle>주택연금</CardTitle>
-        <div className="space-y-3 text-lg text-slate-800">
-          <p>
-            살고 있는 집을 담보로 맡기고 매달 일정 금액을 받는 제도입니다. 집에 계속
-            거주하면서 생활비를 받을 수 있습니다.
-          </p>
-          <p>
-            받는 금액은 집값, 나이, 지급 방식에 따라 정해진 산식으로 계산됩니다. 이
-            산식은 제도로 정해진 것이므로 이 사이트에서 추정하지 않습니다. 한국주택금융
-            공사에서 확인하시기 바랍니다.
-          </p>
-        </div>
-      </Card>
+        <Card>
+          <CardTitle>주택연금</CardTitle>
+          <div className="space-y-3 text-lg text-slate-800">
+            <p>
+              살고 있는 집을 담보로 맡기고 매달 일정 금액을 받는 제도입니다. 집에 계속
+              거주하면서 생활비를 받을 수 있습니다.
+            </p>
+            <p>
+              받는 금액은 집값, 나이, 지급 방식에 따라 정해진 산식으로 계산됩니다. 이
+              산식은 제도로 정해진 것이므로 이 사이트에서 추정하지 않습니다. 한국주택금융
+              공사에서 확인하시기 바랍니다.
+            </p>
+          </div>
+        </Card>
+      </div>
 
       <Card>
         <CardTitle>예상 수령액은 여기서 확인하세요</CardTitle>
@@ -190,6 +204,9 @@ export default function PensionPage() {
           에서 더 보실 수 있습니다.
         </p>
       </Card>
-    </div>
+          </Section>
+        </Shell>
+      </div>
+    </>
   );
 }

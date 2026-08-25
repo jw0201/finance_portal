@@ -5,18 +5,55 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /*
+     * 상단 메뉴가 고정되어 있으므로 그 높이만큼 스크롤 위치를 띄운다.
+     * 좁은 화면에서는 메뉴가 두 줄이 되어 더 높다.
+     */
+    scroll-padding-top: 10rem;
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      scroll-padding-top: 6rem;
+    }
   }
 
   /*
    * 50~70대 사용자를 위해 본문 기본 크기를 18px 로 둔다.
    * 크기 클래스를 붙이지 않은 요소가 브라우저 기본값 16px 로 떨어지지 않게 한다.
+   *
+   * 한글 본문은 시스템 폰트를 우선한다. 웹폰트를 새로 받지 않아
+   * 느린 회선에서도 글자가 늦게 나타나지 않는다.
    */
   body {
-    @apply bg-slate-50 text-base text-slate-900;
+    @apply bg-white text-base text-slate-900 antialiased;
+    font-family:
+      'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+      'Segoe UI', 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
+    word-break: keep-all;
+  }
+
+  /* 금액은 자릿수가 흔들리지 않게 고정폭 숫자를 쓴다. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 
   /* 키보드 사용자를 위해 초점을 확실히 보이게 둔다. */
   :focus-visible {
-    @apply outline-none ring-4 ring-brand-600 ring-offset-2;
+    @apply outline-none ring-4 ring-brand-500 ring-offset-2;
+  }
+}
+
+@layer components {
+  /*
+   * 어두운 띠 위에 얹는 옅은 격자무늬.
+   * 금융 사이트에서 흔히 쓰는 배경 질감이며, 이미지를 받지 않고 CSS 로만 그린다.
+   */
+  .grid-texture {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.055) 1px, transparent 1px);
+    background-size: 68px 68px;
   }
 }

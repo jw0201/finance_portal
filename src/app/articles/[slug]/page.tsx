@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ARTICLES, findArticle, type ArticleBlock } from '@/content/articles';
-import { ButtonLink, Card, Notice } from '@/components/ui';
+import { ButtonLink, Card, Notice, Section, Shell } from '@/components/ui';
 
 /** 정적으로 만들어 둘 글 목록. */
 export function generateStaticParams(): Array<{ slug: string }> {
@@ -26,7 +26,9 @@ export async function generateMetadata({
 function Block({ block }: { block: ArticleBlock }) {
   if (block.kind === 'heading') {
     return (
-      <h2 className="mt-10 text-2xl font-bold text-slate-900">{block.text}</h2>
+      <h2 className="mt-12 text-2xl font-bold tracking-tight text-slate-900">
+        {block.text}
+      </h2>
     );
   }
 
@@ -70,74 +72,93 @@ export default async function ArticlePage({
     notFound();
   }
 
-  // 같은 영역의 다른 글을 추천한다. 없으면 아무 글이나 두 편 보여준다.
+  // 같은 영역의 다른 글을 추천한다.
   const related = ARTICLES.filter(
     (candidate) =>
       candidate.slug !== article.slug && candidate.category === article.category,
   ).slice(0, 2);
 
   return (
-    <div>
-      <p className="mb-4">
-        <Link href="/articles" className="text-lg font-bold text-brand-700 underline">
-          ← 읽을거리 목록
-        </Link>
-      </p>
-
-      <article>
-        <header className="mb-6">
-          <p className="text-base font-bold text-brand-700">{article.category}</p>
-          <h1 className="mt-2 text-3xl font-bold leading-snug text-slate-900 sm:text-4xl">
+    <>
+      {/* 글 머리. 어두운 띠를 화면 끝까지 채운다. */}
+      <div className="grid-texture bg-brand-950">
+        <Shell className="py-12 lg:py-16">
+          <p className="mb-6">
+            <Link
+              href="/articles"
+              className="inline-flex min-h-touch items-center text-lg font-bold text-brand-300 hover:text-white"
+            >
+              ← 읽을거리 목록
+            </Link>
+          </p>
+          <p className="text-base font-bold tracking-wide text-brand-300">
+            {article.category}
+          </p>
+          <h1 className="mt-4 max-w-prose text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
             {article.title}
           </h1>
-          <p className="mt-4 text-lg text-slate-700">{article.summary}</p>
-          <p className="mt-2 text-base text-slate-500">
+          <p className="mt-5 max-w-prose text-lg leading-relaxed text-slate-300">
+            {article.summary}
+          </p>
+          <p className="mt-4 text-base text-slate-400">
             약 {article.readingMinutes}분 분량
           </p>
-        </header>
-
-        <div className="border-t border-slate-200 pt-2">
-          {article.body.map((block, index) => (
-            <Block key={`${block.kind}-${index}`} block={block} />
-          ))}
-        </div>
-      </article>
-
-      <div className="mt-12">
-        <Card>
-          <h2 className="text-xl font-bold text-slate-900">
-            내 상황으로 계산해 보세요
-          </h2>
-          <p className="mt-3 text-lg text-slate-700">
-            글에 나온 예시는 특정 조건일 뿐입니다. 내 자산과 연금, 생활비를 넣으면 자산이
-            언제까지 유지되는지 바로 확인할 수 있습니다.
-          </p>
-          <div className="mt-6">
-            <ButtonLink href="/retirement-calculator">은퇴 계산기 열기</ButtonLink>
-          </div>
-        </Card>
+        </Shell>
       </div>
 
-      {related.length > 0 ? (
-        <section className="mt-10">
-          <h2 className="mb-4 text-2xl font-bold text-slate-900">
-            함께 읽어보면 좋은 글
-          </h2>
-          <ul className="space-y-3">
-            {related.map((candidate) => (
-              <li key={candidate.slug}>
-                <Link
-                  href={`/articles/${candidate.slug}`}
-                  className="text-lg font-bold text-brand-700 underline"
-                >
-                  {candidate.title}
-                </Link>
-                <p className="mt-1 text-base text-slate-600">{candidate.summary}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-    </div>
+      <Shell>
+        <Section>
+          {/*
+           * 본문은 한 줄이 길어지면 읽기 어려우므로 글줄 폭을 제한한다.
+           * 남는 폭은 옆의 안내 칸이 쓴다.
+           */}
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] xl:gap-16">
+            <article className="max-w-prose">
+              {article.body.map((block, index) => (
+                <Block key={`${block.kind}-${index}`} block={block} />
+              ))}
+            </article>
+
+            <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+              <Card>
+                <h2 className="text-lg font-bold tracking-tight text-slate-900">
+                  내 상황으로 계산해 보세요
+                </h2>
+                <p className="mt-3 text-base leading-relaxed text-slate-600">
+                  글에 나온 예시는 특정 조건일 뿐입니다. 내 자산과 연금, 생활비를 넣으면
+                  자산이 언제까지 유지되는지 바로 확인할 수 있습니다.
+                </p>
+                <div className="mt-6">
+                  <ButtonLink href="/retirement-calculator">계산기 열기</ButtonLink>
+                </div>
+              </Card>
+
+              {related.length > 0 ? (
+                <Card>
+                  <h2 className="text-lg font-bold tracking-tight text-slate-900">
+                    함께 읽어보면 좋은 글
+                  </h2>
+                  <ul className="mt-4 space-y-5">
+                    {related.map((candidate) => (
+                      <li key={candidate.slug}>
+                        <Link
+                          href={`/articles/${candidate.slug}`}
+                          className="text-lg font-bold text-brand-700 hover:underline"
+                        >
+                          {candidate.title}
+                        </Link>
+                        <p className="mt-1 text-base leading-relaxed text-slate-600">
+                          {candidate.summary}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              ) : null}
+            </aside>
+          </div>
+        </Section>
+      </Shell>
+    </>
   );
 }

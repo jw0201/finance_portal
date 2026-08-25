@@ -44,7 +44,7 @@ function Th({ children }: { children: React.ReactNode }) {
   return (
     <th
       scope="col"
-      className="border-b-2 border-slate-200 px-3 py-3 text-left text-base font-bold text-slate-700"
+      className="border-b border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-base font-bold text-slate-700"
     >
       {children}
     </th>
@@ -61,7 +61,7 @@ function Td({
 }) {
   return (
     <td
-      className={`border-b border-slate-100 px-3 py-3 text-base ${
+      className={`tabular border-b border-slate-100 px-4 py-3.5 text-base ${
         emphasis ? 'font-bold text-slate-900' : 'text-slate-700'
       }`}
     >
@@ -111,8 +111,10 @@ export function RetirementResult({
     <div className="space-y-10">
       {/* 핵심 4개 숫자 */}
       <section>
-        <h2 className="mb-5 text-2xl font-bold text-slate-900">계산 결과</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <h2 className="mb-6 text-2xl font-bold tracking-tight text-slate-900">
+          계산 결과
+        </h2>
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <KeyFigure
             label="예상 은퇴 월소득"
             value={formatWon(result.monthlyIncomeAtRetirement)}
@@ -154,15 +156,16 @@ export function RetirementResult({
         </div>
       </section>
 
-      {/* 그래프 */}
-      <Card>
-        <CardTitle>나이에 따른 자산 변화</CardTitle>
-        <AssetChart
-          projections={result.projections}
-          retirementAge={input.retirementAge}
-          depletionAge={result.depletionAge}
-        />
-      </Card>
+      {/* 그래프와 지출 한도를 나란히 둔다. */}
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
+        <Card>
+          <CardTitle>나이에 따른 자산 변화</CardTitle>
+          <AssetChart
+            projections={result.projections}
+            retirementAge={input.retirementAge}
+            depletionAge={result.depletionAge}
+          />
+        </Card>
 
       {/* 한 달에 얼마까지 쓸 수 있는가 */}
       <Card>
@@ -200,6 +203,7 @@ export function RetirementResult({
           )}
         </div>
       </Card>
+      </div>
 
       {/* 생활비를 바꾸면 */}
       <Card>
@@ -333,7 +337,7 @@ export function RetirementResult({
       {/* 사용한 가정 */}
       <Card>
         <CardTitle>계산에 사용한 가정</CardTitle>
-        <div>
+        <div className="lg:grid lg:grid-cols-2 lg:gap-x-12">
           <LabeledValue label="현재 나이" value={formatAge(input.currentAge)} />
           <LabeledValue label="은퇴 나이" value={formatAge(input.retirementAge)} />
           <LabeledValue

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, PageHeading } from '@/components/ui';
+import { Card, PageHeading, Section, Shell } from '@/components/ui';
 
 export const metadata: Metadata = {
   title: '계산기',
@@ -27,29 +27,42 @@ const CALCULATORS = [
 
 export default function CalculatorsPage() {
   return (
-    <div>
+    <>
       <PageHeading
+        eyebrow="도구"
         title="계산기"
         description="은퇴 이후의 돈을 계산해 보는 도구입니다. 계산에 사용한 가정은 결과 화면에 함께 표시됩니다."
       />
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {CALCULATORS.map((item) => (
-          <Card key={item.href}>
-            <h2 className="text-xl font-bold text-slate-900">{item.title}</h2>
-            <p className="mt-3 text-base text-slate-700">{item.description}</p>
-            <p className="mt-3 text-base text-slate-600">{item.detail}</p>
-            <p className="mt-5">
-              <Link
-                href={item.href}
-                className="inline-flex min-h-touch items-center rounded-xl bg-brand-600 px-6 text-lg font-bold text-white hover:bg-brand-700"
-              >
-                {item.title} 열기
-              </Link>
-            </p>
-          </Card>
-        ))}
+      <div className="bg-slate-50">
+        <Shell>
+          <Section>
+            <div className="grid gap-6 lg:grid-cols-2">
+              {CALCULATORS.map((item) => (
+                <Card key={item.href} className="flex flex-col">
+                  <h2 className="text-xl font-bold tracking-tight text-slate-900">
+                    {item.title}
+                  </h2>
+                  <p className="mt-4 text-base leading-relaxed text-slate-600">
+                    {item.description}
+                  </p>
+                  <p className="mt-3 text-base leading-relaxed text-slate-600">
+                    {item.detail}
+                  </p>
+                  <p className="mt-auto pt-7">
+                    <Link
+                      href={item.href}
+                      className="inline-flex min-h-touch items-center rounded-xl bg-brand-600 px-8 text-lg font-bold text-white shadow-card transition-colors hover:bg-brand-700"
+                    >
+                      {item.title} 열기
+                    </Link>
+                  </p>
+                </Card>
+              ))}
+            </div>
+          </Section>
+        </Shell>
       </div>
-    </div>
+    </>
   );
 }

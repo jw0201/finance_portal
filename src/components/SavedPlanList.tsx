@@ -82,6 +82,8 @@ export function SavedPlanList() {
         </p>
       </Notice>
 
+      {/* 넓은 화면에서는 저장된 계획을 나란히 놓고 비교한다. */}
+      <div className="grid gap-6 xl:grid-cols-2">
       {plans.map((plan) => {
         // 저장된 값이 온전한지 먼저 확인한다.
         //
@@ -218,6 +220,7 @@ export function SavedPlanList() {
           </Card>
         );
       })}
+      </div>
     </div>
   );
 }
