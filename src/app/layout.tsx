@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
+import { Analytics } from '@vercel/analytics/next';
 import { Shell } from '@/components/ui';
 import './globals.css';
 
@@ -158,6 +159,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        {/*
+         * 방문자 수·페이지 조회 수 집계 (Vercel Web Analytics, 쿠키 없음).
+         * 페이지 주소만 보낸다. 주소에 입력값이 들어가지 않으므로 금융정보는 전송되지 않는다.
+         * 사용자 지정 이벤트는 Pro 요금제 전환 후 추가한다. 이벤트에도 금액을 넣지 않는다.
+         */}
+        <Analytics />
       </body>
     </html>
   );
