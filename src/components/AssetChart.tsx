@@ -44,7 +44,10 @@ export function AssetChart({
   const lastAge = projections[projections.length - 1]?.age ?? firstAge;
   const ageSpan = Math.max(1, lastAge - firstAge);
 
-  const peakAssets = Math.max(...projections.map((year) => year.endingAssets), 1);
+  /** 화면에 보여주는 실제 최댓값. 자산이 내내 0원이면 0원이다. */
+  const peakAssets = Math.max(0, ...projections.map((year) => year.endingAssets));
+  /** 세로축 눈금 기준. 0 으로 나누지 않도록 따로 둔다. 화면 문구에 쓰지 않는다. */
+  const scaleMax = peakAssets > 0 ? peakAssets : 1;
 
   /** 나이를 x 좌표로 바꾼다. */
   const toX = (age: number): number =>
@@ -52,7 +55,7 @@ export function AssetChart({
 
   /** 자산을 y 좌표로 바꾼다. 위로 갈수록 금액이 크다. */
   const toY = (assets: number): number =>
-    CHART.padding.top + PLOT_HEIGHT - (assets / peakAssets) * PLOT_HEIGHT;
+    CHART.padding.top + PLOT_HEIGHT - (assets / scaleMax) * PLOT_HEIGHT;
 
   const linePoints = projections
     .map((year) => `${toX(year.age).toFixed(1)},${toY(year.endingAssets).toFixed(1)}`)
@@ -65,10 +68,11 @@ export function AssetChart({
     `${toX(lastAge).toFixed(1)},${(CHART.padding.top + PLOT_HEIGHT).toFixed(1)}`,
   ].join(' ');
 
-  const yTickValues = Array.from(
-    { length: CHART.yTicks + 1 },
-    (_, index) => (peakAssets / CHART.yTicks) * index,
-  );
+  // 자산이 내내 0원이면 "0원" 눈금 하나만 둔다. 나누면 1원 미만 눈금이 생긴다.
+  const yTickValues =
+    peakAssets > 0
+      ? Array.from({ length: CHART.yTicks + 1 }, (_, index) => (peakAssets / CHART.yTicks) * index)
+      : [0];
 
   // 가로축 눈금은 첫 나이, 은퇴, 고갈, 마지막 나이를 우선해서 보여준다.
   const xTickAges = Array.from(

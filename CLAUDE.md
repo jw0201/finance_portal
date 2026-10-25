@@ -371,7 +371,9 @@ React component 내부에 복잡한 금융 계산 로직을 작성하지 않는�
 요청받지 않은 한 하지 않는다.
 
 검증 상태: `npm test` 364건 통과, `npx tsc --noEmit` 오류 0, `npm run build` 성공,
-`npm audit` 취약점 0. 감사 결과는 `docs/verification-report.md` 에 있다.
+`npm audit` 은 보통(moderate) 3건이 남아 있다 (2026-10-25 기준, Next 16.4.3).
+3건 모두 tailwindcss 3 과 그 하위 패키지이며 tailwind 4 전환 때 함께 정리한다.
+8월 감사 결과는 `docs/verification-report.md` 에 있다.
 
 ### 구현 완료
 
