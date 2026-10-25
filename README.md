@@ -197,11 +197,26 @@ src/
 │   └── tax/                # 세금·건강보험료 (법령 수치는 statutory.ts)
 ├── services/               # 저장 (localStorage)
 └── lib/                    # 금액·나이 표시 형식
+scripts/
+└── screenshots.mjs         # README 화면 스크린샷 찍기
 docs/
 ├── screenshots/            # 이 README 의 화면 이미지
 ├── statutory-research.md   # 법령 수치 확인 근거
 └── verification-report.md  # 검증 보고서
 ```
+
+### 화면 스크린샷 다시 찍기
+
+화면이 바뀌면 이 README 의 이미지를 다시 찍습니다. 맥에 Google Chrome 이 있어야 하고, 따로 설치할 패키지는 없습니다.
+
+```bash
+npm run screenshots                               # 운영 사이트를 찍어 docs/screenshots 에 저장
+BASE=http://localhost:3000 npm run screenshots    # 로컬 개발 서버를 찍기
+```
+
+- 스크립트는 `scripts/screenshots.mjs` 입니다. 계산 화면에는 위 "예시 값" 표의 값을 넣습니다. 예시 값을 바꾸면 이 README 의 설명도 함께 고쳐 주세요.
+- 입력란이나 버튼 이름이 바뀌어 화면을 찾지 못하면 오류를 내고 멈춥니다. 모든 화면을 다 찍은 뒤에만 이미지를 바꾸므로, 중간에 실패해도 기존 이미지는 그대로 남습니다.
+- Chrome 이 다른 위치에 있으면 `CHROME=/경로/Google\ Chrome npm run screenshots` 처럼 지정합니다.
 
 ### 배포
 
