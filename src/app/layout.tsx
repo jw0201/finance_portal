@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { Analytics } from '@vercel/analytics/next';
+import { SiteNav } from '@/components/SiteNav';
 import { Shell } from '@/components/ui';
 import './globals.css';
 
@@ -18,15 +19,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-/** 상단 메뉴. 항목을 적게 두고 글자를 크게 쓴다. */
-const NAV_ITEMS = [
-  { href: '/retirement-calculator', label: '은퇴 계산기' },
-  { href: '/my-retirement', label: '내 은퇴 계획' },
-  { href: '/pension', label: '연금 안내' },
-  { href: '/calculators', label: '계산기' },
-  { href: '/articles', label: '읽을거리' },
-] as const;
-
 /** 아래쪽 띠의 바로가기 묶음. */
 const FOOTER_LINKS = [
   { href: '/retirement-calculator', label: '은퇴 계산기' },
@@ -40,7 +32,7 @@ function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
       <Shell>
-        <div className="flex min-h-touch flex-wrap items-center gap-x-8 gap-y-2 py-2 lg:py-3">
+        <div className="flex min-h-touch flex-wrap items-center gap-x-3 gap-y-2 py-2 sm:gap-x-8 lg:py-3">
           <Link
             href="/"
             className="inline-flex min-h-touch shrink-0 items-center gap-2.5 text-xl font-bold tracking-tight text-slate-900"
@@ -55,40 +47,7 @@ function SiteHeader() {
             은퇴 금융 포털
           </Link>
 
-          {/*
-           * 좁은 화면에서는 메뉴가 여러 줄로 접히면서 화면 위쪽을 절반 가까이
-           * 차지한다. 줄바꿈 대신 가로로 밀어서 보게 한다.
-           */}
-          <nav
-            aria-label="주요 메뉴"
-            className="order-last -mx-5 w-[calc(100%+2.5rem)] overflow-x-auto sm:-mx-8 sm:w-[calc(100%+4rem)] lg:order-none lg:mx-0 lg:w-auto lg:overflow-visible"
-          >
-            <ul className="flex w-max items-center gap-1 px-5 pb-1 sm:px-8 lg:w-auto lg:px-0 lg:pb-0">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="inline-flex min-h-touch shrink-0 items-center whitespace-nowrap rounded-lg px-4 text-lg font-medium text-slate-700 transition-colors hover:bg-brand-50 hover:text-brand-700"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/*
-           * 로그인 버튼은 두지 않는다. 회원 기능을 보류했고, 누르면 "준비 중" 안내만 나온다.
-           * /login, /signup 페이지는 직접 들어온 사람을 위해 남겨 둔다.
-           */}
-          <div className="ml-auto flex items-center gap-3">
-            <Link
-              href="/retirement-calculator"
-              className="hidden min-h-touch items-center rounded-lg bg-brand-600 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-700 sm:inline-flex"
-            >
-              계산 시작
-            </Link>
-          </div>
+          <SiteNav />
         </div>
       </Shell>
     </header>
