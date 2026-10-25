@@ -77,13 +77,11 @@ function SiteHeader() {
             </ul>
           </nav>
 
+          {/*
+           * 로그인 버튼은 두지 않는다. 회원 기능을 보류했고, 누르면 "준비 중" 안내만 나온다.
+           * /login, /signup 페이지는 직접 들어온 사람을 위해 남겨 둔다.
+           */}
           <div className="ml-auto flex items-center gap-3">
-            <Link
-              href="/login"
-              className="inline-flex min-h-touch items-center rounded-lg px-4 text-lg font-bold text-slate-700 transition-colors hover:text-brand-700"
-            >
-              로그인
-            </Link>
             <Link
               href="/retirement-calculator"
               className="hidden min-h-touch items-center rounded-lg bg-brand-600 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-700 sm:inline-flex"
