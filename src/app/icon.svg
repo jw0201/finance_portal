@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 상단 로고(layout.tsx 의 "은" 표시)와 같은 모양. 색은 brand-600. -->
+  <rect width="64" height="64" rx="14" fill="#1d4ed8"/>
+  <text x="32" y="45" text-anchor="middle" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif" font-size="38" font-weight="700" fill="#ffffff">은</text>
+</svg>
